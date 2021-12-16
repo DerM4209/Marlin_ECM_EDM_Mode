@@ -20,20 +20,21 @@ prepare_line_to_destination();
 SERIAL_ECHOLNPGM("towards target", ecm_edm_voltage);
  }
 if (ecm_edm_voltage < TARGET_VOLTAGE && reverse == false){
-planner.quick_stop();
-planner.synchronize();
+quickstop_stepper();
 reverse = true;
 destination = start_position;
 prepare_line_to_destination();
 SERIAL_ECHOLNPGM("towards start", ecm_edm_voltage);
 }
 if (ecm_edm_voltage > TARGET_VOLTAGE && reverse == true){
-planner.quick_stop();
-planner.synchronize();
+quickstop_stepper();
 reverse = false;
 }
+//if (target_position == current_position){
+//SERIAL_ECHOLNPGM("target reached!");
+//target_reached = true;
+//}
 }
-
 void ecm_edm_mode(){
 if (edm_ecm_setup == true){
 origin_position = current_position;
