@@ -6,6 +6,7 @@
 bool edm_ecm_setup = true;
 bool target_reached = false;
 bool reverse = false;
+bool moving = false;
 xyz_pos_t origin_position;
 xyz_pos_t start_position;
 xyz_pos_t target_position;
@@ -14,21 +15,27 @@ xyz_pos_t target_position;
 
 void move_to_target(){
 idle();
-if (ecm_edm_voltage > TARGET_VOLTAGE && reverse == false){
+
+if (ecm_edm_voltage > TARGET_VOLTAGE && moving == false){ //at start when voltage is high and electrode is not moving, start moving
+moving = true;
+SERIAL_ECHOLNPGM("start moving towards target", ecm_edm_voltage);
 destination = target_position;
 prepare_line_to_destination();
-SERIAL_ECHOLNPGM("towards target", ecm_edm_voltage);
  }
-if (ecm_edm_voltage < TARGET_VOLTAGE && reverse == false){
+ 
+if (ecm_edm_voltage < TARGET_VOLTAGE && moving == true && reverse == false){ //when voltage is low and electrode is moving towards target
 quickstop_stepper();
 reverse = true;
+SERIAL_ECHOLNPGM("stop and move towards start", ecm_edm_voltage);
 destination = start_position;
 prepare_line_to_destination();
-SERIAL_ECHOLNPGM("towards start", ecm_edm_voltage);
 }
-if (ecm_edm_voltage > TARGET_VOLTAGE && reverse == true){
+if (ecm_edm_voltage > TARGET_VOLTAGE && moving == true && reverse == true){ //when voltage is high and electrode is moving towards start
 quickstop_stepper();
 reverse = false;
+SERIAL_ECHOLNPGM("stop and move towards target", ecm_edm_voltage);
+destination = target_position;
+prepare_line_to_destination();
 }
 //if (target_position == current_position){
 //SERIAL_ECHOLNPGM("target reached!");
