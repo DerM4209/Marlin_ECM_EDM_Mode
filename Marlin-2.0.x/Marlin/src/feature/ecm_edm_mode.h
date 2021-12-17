@@ -12,35 +12,35 @@ xyz_pos_t start_position;
 xyz_pos_t target_position;
 
 #ifdef ECM_EDM_MODE
-
 void move_to_target(){
 idle();
-
+get_cartesian_from_steppers();
 if (ecm_edm_voltage > TARGET_VOLTAGE && moving == false){ //at start when voltage is high and electrode is not moving, start moving
-moving = true;
 SERIAL_ECHOLNPGM("start moving towards target", ecm_edm_voltage);
+moving = true;
 destination = target_position;
 prepare_line_to_destination();
  }
- 
 if (ecm_edm_voltage < TARGET_VOLTAGE && moving == true && reverse == false){ //when voltage is low and electrode is moving towards target
+SERIAL_ECHOLNPGM("stop and move towards start", ecm_edm_voltage);
 quickstop_stepper();
 reverse = true;
-SERIAL_ECHOLNPGM("stop and move towards start", ecm_edm_voltage);
 destination = start_position;
 prepare_line_to_destination();
 }
 if (ecm_edm_voltage > TARGET_VOLTAGE && moving == true && reverse == true){ //when voltage is high and electrode is moving towards start
+SERIAL_ECHOLNPGM("stop and move towards target", ecm_edm_voltage);
 quickstop_stepper();
 reverse = false;
-SERIAL_ECHOLNPGM("stop and move towards target", ecm_edm_voltage);
 destination = target_position;
 prepare_line_to_destination();
 }
-//if (target_position == current_position){
-//SERIAL_ECHOLNPGM("target reached!");
-//target_reached = true;
-//}
+if (cartes == target_position){
+SERIAL_ECHOLNPGM("target reached!");
+start_position = target_position;
+moving = false;
+target_reached = true;
+}
 }
 void ecm_edm_mode(){
 if (edm_ecm_setup == true){
@@ -50,9 +50,9 @@ target_position = current_position;
 edm_ecm_setup = false;
 }
 if (new_destination != target_position && new_destination != origin_position){
+SERIAL_ECHOLNPGM("new target saved!");
 target_position = new_destination;
 target_reached = false;
-SERIAL_ECHOLNPGM("new target saved!");
 while (target_reached == false){
 move_to_target();
 }
