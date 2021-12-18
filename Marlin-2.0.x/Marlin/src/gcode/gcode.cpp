@@ -178,7 +178,7 @@ void GcodeSuite::get_destination_from_command() {
   LOOP_LINEAR_AXES(i) {
     if ( (seen[i] = parser.seenval(AXIS_CHAR(i))) ) {
       const float v = parser.value_axis_units((AxisEnum)i);
-      if (skip_move)
+      if (skip_move || run_ecm_edm_mode)
         destination[i] = current_position[i];
       else
         destination[i] = axis_is_relative(AxisEnum(i)) ? current_position[i] + v : LOGICAL_TO_NATIVE(v, i);
@@ -187,17 +187,16 @@ void GcodeSuite::get_destination_from_command() {
       destination[i] = current_position[i];
   }
   
-#ifdef ECM_EDM_MODE
+if (run_ecm_edm_mode == true){
   LOOP_LINEAR_AXES(i) {
     if ( (seen[i] = parser.seenval(AXIS_CHAR(i))) ) {
       const float v = parser.value_axis_units((AxisEnum)i);
-        destination[i] = current_position[i];
         new_destination[i] = axis_is_relative(AxisEnum(i)) ? current_position[i] + v : LOGICAL_TO_NATIVE(v, i);
     }
     else
       new_destination[i] = current_position[i];
   }
-#endif
+}
 
   #if HAS_EXTRUDERS
     // Get new E position, whether absolute or relative
@@ -354,6 +353,11 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       #if ENABLED(DIRECT_STEPPING)
         case 6: G6(); break;                                      // G6: Direct Stepper Move
+      #endif
+
+     #if ENABLED(ECM_EDM_MODE)
+        case 7: G7(); break;                                      // G7: Enable ECM / EDM Mode
+		case 8: G8(); break;                                      // G8: Disable ECM / EDM Mode
       #endif
 
       #if ENABLED(FWRETRACT)
