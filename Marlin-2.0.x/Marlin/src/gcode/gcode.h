@@ -466,6 +466,11 @@ private:
     static void G6();
   #endif
 
+  #if ENABLED(ECM_EDM_MODE)
+    static void G7();
+    static void G8();
+  #endif
+
   #if ENABLED(FWRETRACT)
     static void G10();
     static void G11();
