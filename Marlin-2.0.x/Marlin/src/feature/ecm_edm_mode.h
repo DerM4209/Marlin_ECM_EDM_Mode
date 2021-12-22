@@ -75,37 +75,3 @@ edm_ecm_setup = true;
 }
 }
   #endif
-  
-/*
-if (ecm_edm_voltage > GAP_LOWER_LIMIT && ecm_edm_voltage < GAP_UPPER_LIMIT){
-quickstop_stepper();
-}
-}
-//const millis_t ms = millis();
-//static millis_t message_event_ms = 0;
- //if (ELAPSED(ms, message_event_ms)){
-//message_event_ms = ms + 2000;
-//SERIAL_ECHO_MSG(STR_BUSY_PROCESSING);
-//}
- /*
-do_blocking_move_to(target_position, feedrate_mm_s);
-if (ecm_edm_voltage < GAP_UPPER_LIMIT && ecm_edm_voltage > GAP_LOWER_LIMIT){
-quickstop_stepper();
-}
-}
-}
-/*if (ecm_edm_voltage > GAP_LOWER_LIMIT && ecm_edm_voltage < GAP_UPPER_LIMIT){
-SERIAL_ECHOLNPGM("Gap OK!", ecm_edm_voltage);
-destination = current_position;
-prepare_line_to_destination();
-if (destination != current_position){
-quickstop_stepper();
-}
-}
-/*if (current_position == target_position){
-SERIAL_ECHOLNPGM("target reached!");	
-const millis_t wait = millis() + 500;
-while (PENDING(millis(), wait)) idle();
-start_position = target_position;
-SERIAL_ECHOLNPGM("position secured, continue!");
-}*/
