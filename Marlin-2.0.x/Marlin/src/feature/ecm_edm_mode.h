@@ -43,7 +43,7 @@ reverse = false;
 destination = target_position;
 prepare_line_to_destination();
 }
-if (cartes == target_position){
+if (!planner.has_blocks_queued() && moving == true && reverse == false){
 SERIAL_ECHOLNPGM("target reached");
 start_position = target_position;
 report_current_position();
