@@ -17,7 +17,7 @@ xyz_pos_t target_position;
 void move_to_target(){
 idle();
 get_cartesian_from_steppers();
-if (ecm_edm_voltage > TARGET_VOLTAGE && moving == false){ //at start when voltage is high and electrode is not moving, start moving
+if (moving == false){ //at start when voltage is high and electrode is not moving, start moving
 SERIAL_ECHOLNPGM("start moving towards target", ecm_edm_voltage);
 report_current_position();
 report_real_position();
