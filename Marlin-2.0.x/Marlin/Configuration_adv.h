@@ -2051,7 +2051,7 @@
 
 #define ECM_EDM_MODE
 #if ENABLED(ECM_EDM_MODE)
-#define TARGET_VOLTAGE 600
+#define TARGET_VOLTAGE 480
 #endif
 
 //
