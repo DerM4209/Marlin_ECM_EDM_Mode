@@ -16,7 +16,6 @@ xyz_pos_t target_position;
 #ifdef ECM_EDM_MODE
 void move_to_target(){
 idle();
-get_cartesian_from_steppers();
 if (moving == false){ //at start when voltage is high and electrode is not moving, start moving
 SERIAL_ECHOLNPGM("start moving towards target", ecm_edm_voltage);
 report_current_position();
